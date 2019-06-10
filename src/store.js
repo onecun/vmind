@@ -5,16 +5,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        // 数据结构
         'node': {
-            'topic': '主节点',
-            'id': 'root',
-            'expanded': true,
-            'children': [],
-            'childNumber': 0,
+            'author': '小王',
+            'date': 'now',
+            'children': [
+                {
+                    'topic': '主节点',
+                    'id': 'node',
+                    'expanded': true,
+                    'children': [],
+                    'childNumber': 0,
+                },
+            ],
         }
     },
     mutations: {
         ADD_CHILDREN(state, node) {
+            // node[1] children , node[0] child
             node[1].push(node[0])
             // state.node.childNumber++ 
         },
