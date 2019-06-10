@@ -6,10 +6,10 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state: {
         // 数据结构
-        'node': {
+        'mindMap': {
             'author': '小王',
             'date': 'now',
-            'children': [
+            'nodes': [
                 {
                     'topic': '主节点',
                     'id': 'node',

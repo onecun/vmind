@@ -1,14 +1,14 @@
 <template>
 <div id="app">
-    <mind></mind>
+    <index></index>
 </div>
 </template>
 
 <script>
-import mind from './components/mind.vue'
+import index from './components/index.vue'
 export default {
     name: 'app',
-    components: {mind},
+    components: {index},
 }
 </script>
 
