@@ -1,5 +1,6 @@
 <template>
-<main ref="main" id="jsmind_container" @click="test()">
+<main ref="main" id="jsmind_container" @mousedown="setPopupPosition">
+    <popup ref="test"></popup>
 </main>
 </template>
 
@@ -8,8 +9,10 @@ import 'jsmind/style/jsmind.css'
 import jsMind from 'jsmind/js/jsmind'
 import 'jsmind/js/jsmind.draggable'
 import 'jsmind/js/jsmind.screenshot'
+import popup from './popup'
 
 export default {
+    components: {popup},
     data() {
         return {
             options: { 
@@ -114,15 +117,37 @@ export default {
         downloawImg() {
             this.jm.screenshot.shootDownload()
         },
-        test() {
-            console.log(this.jm.screenshoot)
-
+        setPopupPosition(event) {
+            var ele = event.target
+            if (ele.tagName === 'JMNODE') {
+                let top = ele.style.top
+                let left = ele.style.left
+                this.$bus.$emit('setPosition', top, left)
+            }
         }
     },
     created() {
         this.$bus.$on('downloadImg', () => {
             this.downloawImg()
         })
+        this.$bus.$on('addNode', () => {
+            let selectedNode = this.jm.get_selected_node()
+            if (selectedNode) {
+                let nodeid = jsMind.util.uuid.newid()
+                let topic = '新建节点'
+                this.jm.add_node(selectedNode, nodeid, topic)
+                // this.jm.insert_node_after(node_after, nodeid, topic)
+            }
+        })
+        this.$bus.$on('addBrotherNode', () => {
+            let selectedNode = this.jm.get_selected_node()
+            if (selectedNode) {
+                let nodeid = jsMind.util.uuid.newid()
+                let topic = '新建节点'
+                this.jm.insert_node_after(selectedNode, nodeid, topic)
+            }
+        })
+
     },
     mounted() {
         this.init()
@@ -132,4 +157,9 @@ export default {
 
 <style lang="scss">
 // @import '..assets/styles/global';
+// .test {
+//     position: fixed;
+//     z-index: 100;
+//     background-color: red;
+// }
 </style>
