@@ -1,0 +1,77 @@
+@font-face {
+  font-family: 'icomoon';
+  src:  url('fonts/icomoon.eot?1ptysc');
+  src:  url('fonts/icomoon.eot?1ptysc#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?1ptysc') format('truetype'),
+    url('fonts/icomoon.woff?1ptysc') format('woff'),
+    url('fonts/icomoon.svg?1ptysc#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-create:before {
+  content: "\e900";
+  color: #409EFF;
+}
+.icon-delete:after {
+  content: "\e901";
+  margin-top: -1.45rem;
+  color: #409EFF;
+}
+.icon-delete:before {
+  content: "\e902";
+  /* margin-left: -1em; */
+  color: #409EFF;
+}
+.icon-download:before {
+  content: "\e903";
+  color: #409EFF;
+}
+.icon-edit:before {
+  content: "\e904";
+  color: #409EFF;
+}
+.icon-node:before {
+  content: "\e905";
+  color: #409EFF;
+}
+.icon-open:before {
+  content: "\e906";
+  color: #409EFF;
+}
+.icon-sub-node:before {
+  content: "\e907";
+  color: #409EFF;
+}
+/* .icon-sub-node .path2:before {
+  content: "\e908";
+  margin-left: -1em;
+  color: rgb(255, 240, 0);
+} */
+.icon-theme:before {
+  content: "\e909";
+  color: #409EFF;
+}
+.icon-unfold:before {
+  content: "\e90a";
+  color: #409EFF;
+}
+.icon-unfold-all:before {
+  content: "\e90b";
+  color: #409EFF;
+}

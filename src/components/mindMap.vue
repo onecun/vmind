@@ -1,5 +1,5 @@
 <template>
-<main ref="main" id="jsmind_container" @mousedown="setPopupPosition">
+<main ref="main" id="jsmind_container" @mousedown="setPopupPosition($event)">
     <popup ref="test"></popup>
 </main>
 </template>
@@ -124,10 +124,11 @@ export default {
         setPopupPosition(event) {
             var ele = event.target
             if (ele.tagName === 'JMNODE') {
+                // console.log(ele.tagName)
                 let top = ele.style.top
                 let left = ele.style.left
                 this.$bus.$emit('setPosition', true, top, left)
-            } else if (ele.tagName !== 'BUTTON') {
+            } else if (ele.tagName !== 'BUTTON' && ele.tagName !== 'SPAN') {
                 this.$bus.$emit('setPosition', false)
             }
         },

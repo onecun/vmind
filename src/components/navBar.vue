@@ -3,12 +3,14 @@
     <file-action-menu></file-action-menu>
 
     <div class="file-title-wrapper">
-        <span @click="changeTitleShow = true" 
-            v-show="!changeTitleShow">{{ title }}</span>
+        <span class="file-title"
+            @click="changeTitle = true" 
+            contenteditable="changeTitle">{{ title }}</span>
         
-        <input v-show="changeTitleShow" 
+        <!-- <input class="input-title"
+            v-show="changeTitleShow" 
             @keydown.enter="changeTitleShow = false"
-            v-model="title" type="text" placeholder="输入新标题">
+            v-model="title" type="text" placeholder="输入新标题"> -->
 
     </div>
 
@@ -27,7 +29,6 @@ export default {
     data() {
         return {
             title: '未命名标题',
-            changeTitleShow: false,
         }
     },
     methods: {
@@ -37,15 +38,29 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// @import '..assets/styles/global';
 .nav-bar-wrapper {
     position: fixed;
     top: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
-    background-color: #ccc;
-    height: 5vh;
+    align-items: center;
+    background-color: #fff;
     z-index: 100;
+    border-bottom: 1px solid #E4E7ED;
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.2);
+
+    .file-title-wrapper {
+        .file-title {
+            color: #67C23A;
+            font-size: 22px;
+            font-weight: bold;
+            &:focus {
+                outline: none;
+                border-bottom: 2px solid #67C23A;
+                transition: border 0.2s ease-in-out;
+            }
+        }
+    }
 }
 </style>
