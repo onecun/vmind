@@ -10,7 +10,7 @@
             @keydown.enter="changeTitleShow = false"
             v-model="title" type="text" placeholder="输入新标题">
 
-        </div>
+    </div>
 
     <view-control></view-control>
 </div>
@@ -39,11 +39,13 @@ export default {
 <style lang="scss" scoped>
 // @import '..assets/styles/global';
 .nav-bar-wrapper {
-    position: relative;
+    position: fixed;
     top: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
     background-color: #ccc;
+    height: 5vh;
+    z-index: 100;
 }
 </style>

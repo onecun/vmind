@@ -12,10 +12,12 @@ import 'jsmind/js/jsmind.screenshot'
 import popup from './popup'
 
 export default {
-    components: {popup},
+    components: {
+        popup
+    },
     data() {
         return {
-            options: { 
+            options: {
                 container: 'jsmind_container', // [必选] 容器的ID，或者为容器的对象
                 editable: true, // [可选] 是否启用编辑
                 theme: 'orange', // [可选] 主题
@@ -117,36 +119,57 @@ export default {
         downloawImg() {
             this.jm.screenshot.shootDownload()
         },
+        
+        // 设置点击节点后 popup 出现的位置
         setPopupPosition(event) {
             var ele = event.target
             if (ele.tagName === 'JMNODE') {
                 let top = ele.style.top
                 let left = ele.style.left
-                this.$bus.$emit('setPosition', top, left)
+                this.$bus.$emit('setPosition', true, top, left)
+            } else if (ele.tagName !== 'BUTTON') {
+                this.$bus.$emit('setPosition', false)
             }
+        },
+
+        // 绑定 popup 上按钮的事件
+        // 增删改等
+        popupBindEevent() {
+            this.$bus.$on('addNode', () => {
+                let selectedNode = this.jm.get_selected_node()
+                if (selectedNode) {
+                    let nodeid = jsMind.util.uuid.newid()
+                    let topic = '新建节点'
+                    this.jm.add_node(selectedNode, nodeid, topic)
+                }
+            })
+            this.$bus.$on('addBrotherNode', () => {
+                let selectedNode = this.jm.get_selected_node()
+                if (selectedNode) {
+                    let nodeid = jsMind.util.uuid.newid()
+                    let topic = '新建节点'
+                    this.jm.insert_node_after(selectedNode, nodeid, topic)
+                }
+            })
+            this.$bus.$on('deleteNode', () => {
+                let selectedNodeId = this.jm.get_selected_node().id
+                if (selectedNodeId) {
+                    this.jm.remove_node(selectedNodeId)
+                }
+            })
+            this.$bus.$on('toggleNode', () => {
+                let selectedNode = this.jm.get_selected_node()
+                if (selectedNode) {
+                    this.jm.toggle_node(selectedNode)
+                }
+            })
         }
     },
     created() {
         this.$bus.$on('downloadImg', () => {
             this.downloawImg()
         })
-        this.$bus.$on('addNode', () => {
-            let selectedNode = this.jm.get_selected_node()
-            if (selectedNode) {
-                let nodeid = jsMind.util.uuid.newid()
-                let topic = '新建节点'
-                this.jm.add_node(selectedNode, nodeid, topic)
-                // this.jm.insert_node_after(node_after, nodeid, topic)
-            }
-        })
-        this.$bus.$on('addBrotherNode', () => {
-            let selectedNode = this.jm.get_selected_node()
-            if (selectedNode) {
-                let nodeid = jsMind.util.uuid.newid()
-                let topic = '新建节点'
-                this.jm.insert_node_after(selectedNode, nodeid, topic)
-            }
-        })
+        this.popupBindEevent()
 
     },
     mounted() {
@@ -157,9 +180,5 @@ export default {
 
 <style lang="scss">
 // @import '..assets/styles/global';
-// .test {
-//     position: fixed;
-//     z-index: 100;
-//     background-color: red;
-// }
+
 </style>
