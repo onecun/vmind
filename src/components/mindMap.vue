@@ -21,6 +21,7 @@ export default {
                 container: 'jsmind_container', // [必选] 容器的ID，或者为容器的对象
                 editable: true, // [可选] 是否启用编辑
                 theme: 'warning', // [可选] 主题
+                mode: 'full',
                 view: {
                     hmargin: 100, // 思维导图距容器外框的最小水平距离
                     vmargin: 100, // 思维导图距容器外框的最小垂直距离

@@ -1,5 +1,5 @@
 <template>
-    <div ref="popup" class="popup-menu" v-show="show" @click="show = false">
+    <div ref="popup" :style="{top: offsetTop, left: offsetLeft}" class="popup-menu" v-show="show" @click="show = false">
         <button class="add-node" v-on:click="addNode()">
             <span class="icon icon-node"></span>
             <span>添加子节点</span>
@@ -28,6 +28,8 @@ export default {
     data() {
         return {
             show: false,
+            offsetTop: '',
+            offsetLeft: '',
         }
     },
     methods: {
@@ -50,8 +52,8 @@ export default {
     created() {
         this.$bus.$on('setPosition', (isShow, top, left) => {
             this.show = isShow
-            this.$refs.popup.style.top = top - 60 + 'px'
-            this.$refs.popup.style.left = left + 'px'
+            this.offsetTop = top - 60 + 'px'
+            this.offsetLeft = left + 'px'
         })
     }
 }
