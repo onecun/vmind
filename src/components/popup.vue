@@ -12,7 +12,7 @@
             <span class="icon icon-delete"></span>
             <span>删除</span>
         </button>
-        <button class="edit-node">
+        <button class="edit-node" @click="editNode()">
             <span class="icon icon-edit"></span>
             <span>编辑</span>
         </button>
@@ -40,6 +40,9 @@ export default {
         deleteNode() {
             this.$bus.$emit('deleteNode')            
         },
+        editNode() {
+            this.$bus.$emit('editNode') 
+        },
         toggleNode() {
             this.$bus.$emit('toggleNode')
         },
@@ -47,8 +50,8 @@ export default {
     created() {
         this.$bus.$on('setPosition', (isShow, top, left) => {
             this.show = isShow
-            this.$refs.popup.style.top = parseInt(top) - 60 + 'px'
-            this.$refs.popup.style.left = left
+            this.$refs.popup.style.top = top - 60 + 'px'
+            this.$refs.popup.style.left = left + 'px'
         })
     }
 }
