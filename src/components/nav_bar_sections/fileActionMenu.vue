@@ -12,20 +12,18 @@
          <span class="icon icon-download"></span>
         <span>下载</span>
      </button>
-    <message-box @cancel='showMessageBox = false' @confirm='openFile()' v-if="showMessageBox">
+    <message-box @cancel='showMessageBox = false' @confirm='clickConfirm()' v-if="showMessageBox">
         <p v-if="showOpenMenu">此操作将导致当前思维导图的数据丢失!</p>
-        <div v-else>
-            <div class="radio-group">
+            <div v-else class="radio-group">
                 <label class="radio" @click="toggleCheck(1)">
-                    <span class="radio-inner"><span>
+                    <span class="radio-inner" :class="{'radio-checked': checked1}"></span>
                     <span class="radio-label">图片</span>
                 </label>
                 <label class="radio" @click="toggleCheck(2)">
-                    <span class="radio-inner"><span>
+                    <span class="radio-inner" :class="{'radio-checked': checked2}"></span>
                     <span class="radio-label">jm</span>
                 </label>
             </div>
-        </div>
     </message-box>
 </section>
 </template>
@@ -34,6 +32,7 @@
 import messageBox from '../messageBox'
 
 export default {
+    props: ['title'],
     components: {
         messageBox
     },
@@ -41,7 +40,7 @@ export default {
         return {
             showMessageBox: false,
             showOpenMenu: false,
-            checked1: true,
+            checked1: false,
             checked2: false,
         }
     },
@@ -49,18 +48,21 @@ export default {
         toggleCheck(checkId) {
             if (checkId === 1) {
                 this.checked1 = !this.checked1
-                // this.checked2 = true
+                this.checked2 = false
             } else {
-                this.checked2 = true
-                // this.checked1 = false
+                this.checked2 = !this.checked2
+                this.checked1 = false
             }
         },
         download() {
-            this.$bus.$emit('downloadImg')
+            // checked1 下载图片, checked2 下载 jm 文件
+            if (this.checked1) {
+                this.$bus.$emit('downloadImg')
+            } else if (this.checked2) {
+                this.$bus.$emit('downloadJm', this.title)
+            }
         },
         openFile() {
-            this.showMessageBox = false
-            //
             const input = document.createElement('input')
             input.type = 'file'
             input.accept = '.jm'
@@ -89,11 +91,20 @@ export default {
             }
             fileReader.readAsText(file, 'utf-8')
         },
+        clickConfirm() {
+            this.showMessageBox = false
+            //
+            if (this.showOpenMenu) {
+                this.openFile()
+            } else {
+                this.download()
+            }
+        },
     },
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../../assets/styles/icon.css';
 
 .file-action {
@@ -117,5 +128,54 @@ export default {
 
 .icon {
     font-size: 26px;
+}
+
+.radio-group {
+    padding: 0;
+    .radio {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        width: 120px;
+        margin: 4px 0 4px 0;
+        border: 1px solid #DCDFE6;
+        border-radius: 6px;
+        .radio-inner {
+            border: 1px solid #DCDFE6;
+            border-radius: 100%;
+            width: 14px;
+            height: 14px;
+            background-color: #fff;
+            position: relative;
+            padding: 0;
+            cursor: pointer;
+            display: inline-block;
+            box-sizing: border-box;
+            &:hover{
+                border-color: #409EFF;
+            }
+        }
+        .radio-label {
+            padding: 0 !important;
+            width: 70px;
+        }
+    }
+    .radio-checked {
+        border: 2px solid #409EFF;
+        background: #409EFF !important;
+        &::after {
+            width: 4px;
+            height: 4px;
+            border-radius: 100%;
+            background-color: #fff;
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            transition: transform .15s ease-in;
+        }
+    }
 }
 </style>

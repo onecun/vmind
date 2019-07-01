@@ -126,6 +126,17 @@ export default {
         downloawImg() {
             this.jm.screenshot.shootDownload()
         },
+        downloawJm(title) {
+            const link = document.createElement('a')
+            link.download = title + '.jm'
+            // 字符内容转变成blob地址
+            let str = JSON.stringify(this.jm.get_data())
+            let blob = new Blob([str])
+            link.href = URL.createObjectURL(blob)
+            // 点击下载
+            link.click()
+            log(link)
+        },
 
         // 设置点击节点后 popup 出现的位置
         setPopupPosition(event) {
@@ -197,6 +208,9 @@ export default {
     created() {
         this.$bus.$on('downloadImg', () => {
             this.downloawImg()
+        })
+        this.$bus.$on('downloadJm', (title) => {
+            this.downloawJm(title)
         })
         this.$bus.$on('readFile', (str) => {
             let file = JSON.parse(str)

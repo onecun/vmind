@@ -1,6 +1,6 @@
 <template>
 <div class="nav-bar-wrapper">
-    <file-action-menu></file-action-menu>
+    <file-action-menu :title="title"></file-action-menu>
 
     <div class="file-title-wrapper">
         <span class="file-title"

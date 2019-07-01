@@ -50,7 +50,7 @@ export default {
     left: 0;
     right: 0;
     text-align: center;
-    background: rgba($color: #000000, $alpha: 0);
+    background: rgba($color: #000000, $alpha: 0) !important;
 }
 
 .message-box {
