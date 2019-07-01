@@ -39,6 +39,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '../../assets/styles/global.scss';
+
 .view-control {
     display: flex;
     width: 10%;
@@ -55,6 +57,7 @@ export default {
         border: none;
         font-size: 12px;
         cursor: pointer;
+        outline: none;
     }
 
     .theme {
@@ -82,21 +85,5 @@ export default {
 
 .icon {
     font-size: 26px;
-}
-
-.fadein {
-    animation: fadein 0.4s linear;
-}
-
-@keyframes fadein {
-    0% {
-        opacity: 0;
-        top: 70%;
-    }
-
-    100% {
-        opacity: 1;
-        top: 100%;
-    }
 }
 </style>

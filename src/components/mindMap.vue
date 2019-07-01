@@ -135,9 +135,12 @@ export default {
                 let top = ele.offsetTop
                 let left = ele.offsetLeft
                 this.$bus.$emit('setPosition', true, top, left)
-                // // log(left, ele.scrollWidth)
-                // // 
-                // window.scrollTo(left, top - ele.scrollWidth / 2)
+                //
+                ele.scrollIntoView({
+                    block: 'center',
+                    behavior: 'smooth',
+                    inline: 'center',
+                })
             } else if (ele.tagName !== 'BUTTON' && ele.tagName !== 'SPAN') {
                 this.$bus.$emit('setPosition', false)
             }
@@ -194,6 +197,10 @@ export default {
     created() {
         this.$bus.$on('downloadImg', () => {
             this.downloawImg()
+        })
+        this.$bus.$on('readFile', (str) => {
+            let file = JSON.parse(str)
+            this.jm.show(file)
         })
         // 绑定 popup 上按钮的事件
         this.popupBindEevent()
