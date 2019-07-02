@@ -10,6 +10,7 @@ import jsMind from 'jsmind/js/jsmind'
 import 'jsmind/js/jsmind.draggable'
 import 'jsmind/js/jsmind.screenshot'
 import popup from './popup'
+import local from '../localSave'
 
 export default {
     components: {
@@ -28,99 +29,55 @@ export default {
                     line_width: 2, // 思维导图线条的粗细
                     line_color: '#555' // 思维导图线条的颜色
                 },
+                layout:{
+                    hspace: 50,          // 节点之间的水平间距
+                    vspace: 40,          // 节点之间的垂直间距
+                    pspace: 13,           // 节点收缩/展开控制器的尺寸
+                },
             },
             defaultMind: {
-                /* 元数据，定义思维导图的名称、作者、版本等信息 */
+                // 元信息
                 "meta": {
                     "name": "jsMind-demo-tree",
                     "author": "hizzgdev@163.com",
                     "version": "0.2"
                 },
-                /* 数据格式声明 */
+                // 格式
                 "format": "node_tree",
-                /* 数据内容 */
+                // 节点数据
                 "data": {
                     "id": "root",
-                    "topic": "jsMind",
+                    "topic": "主题",
+                    "expanded": true,
                     "children": [{
-                            "id": "easy",
-                            "topic": "Easy",
-                            "direction": "left",
-                            "expanded": true,
-                            "children": [{
-                                    "id": "easy1",
-                                    "topic": "Easy to show"
-                                },
-                                {
-                                    "id": "easy2",
-                                    "topic": "Easy to edit"
-                                },
-                                {
-                                    "id": "easy3",
-                                    "topic": "Easy to store"
-                                },
-                                {
-                                    "id": "easy4",
-                                    "topic": "Easy to embed"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "open",
-                            "topic": "Open Source",
-                            "direction": "right",
-                            "expanded": true,
-                            "children": [{
-                                    "id": "open1",
-                                    "topic": "on GitHub"
-                                },
-                                {
-                                    "id": "open2",
-                                    "topic": "BSD License"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "powerful",
-                            "topic": "Powerful",
-                            "direction": "right",
-                            "children": [{
-                                    "id": "powerful1",
-                                    "topic": "Base on Javascript"
-                                },
-                                {
-                                    "id": "powerful2",
-                                    "topic": "Base on HTML5"
-                                },
-                                {
-                                    "id": "powerful3",
-                                    "topic": "Depends on you"
-                                }
-                            ]
-                        },
-                        {
-                            "id": "other",
-                            "topic": "test node",
-                            "direction": "left",
-                            "children": [{
-                                    "id": "other1",
-                                    "topic": "I'm from local variable"
-                                },
-                                {
-                                    "id": "other2",
-                                    "topic": "I can do everything"
-                                }
-                            ]
-                        }
-                    ]
+                        "id": "bb228f7b14432504",
+                        "topic": "分支1",
+                        "expanded": true,
+                        "direction": "right"
+                    }, {
+                        "id": "bb2290248041a7dd",
+                        "topic": "分支2",
+                        "expanded": true,
+                        "direction": "right"
+                    }, {
+                        "id": "bb228fe58acbb22e",
+                        "topic": "分支3",
+                        "expanded": true,
+                        "direction": "right"
+                    }]
                 }
-            },
+            }
         }
     },
     methods: {
         init() {
             this.jm = new jsMind(this.options)
-            this.jm.show(this.defaultMind)
+            let localMind = local.getLocal()
+            if (localMind) {
+                this.jm.show(localMind)
+            } else {
+                this.jm.show(this.defaultMind)
+            }
             // console.log(jm)
         },
         downloawImg() {
@@ -169,6 +126,8 @@ export default {
                     // 新建节点后，触发编辑
                     this.$bus.$emit('editNode', nodeid)
                 }
+                //
+                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('addBrotherNode', () => {
                 let selectedNode = this.jm.get_selected_node()
@@ -179,6 +138,8 @@ export default {
                     // 新建节点后，触发编辑
                     this.$bus.$emit('editNode', nodeid)
                 }
+                //
+                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('deleteNode', () => {
                 let selectedNode = this.jm.get_selected_node()

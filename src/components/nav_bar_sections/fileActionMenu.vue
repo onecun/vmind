@@ -1,29 +1,32 @@
 <template>
 <section class="file-action">
-    <button class="create">
+    <button @click="showMessageBox = 1" class="create">
         <span class="icon icon-create"></span>
         <span>新建</span>
      </button>
-    <button @click="showMessageBox = true; showOpenMenu = true" class="open">
+    <button @click="showMessageBox = 2" class="open">
          <span class="icon icon-open"></span>
         <span>打开</span>
      </button>
-    <button class="download" @click="showMessageBox = true; showOpenMenu = false">
+    <button @click="showMessageBox = 3" class="download">
          <span class="icon icon-download"></span>
         <span>下载</span>
      </button>
-    <message-box @cancel='showMessageBox = false' @confirm='clickConfirm()' v-if="showMessageBox">
-        <p v-if="showOpenMenu">此操作将导致当前思维导图的数据丢失!</p>
-            <div v-else class="radio-group">
-                <label class="radio" @click="toggleCheck(1)">
-                    <span class="radio-inner" :class="{'radio-checked': checked1}"></span>
-                    <span class="radio-label">图片</span>
-                </label>
-                <label class="radio" @click="toggleCheck(2)">
-                    <span class="radio-inner" :class="{'radio-checked': checked2}"></span>
-                    <span class="radio-label">jm</span>
-                </label>
-            </div>
+    <message-box @cancel='showMessageBox = 0' @confirm='clickConfirm()' v-if="showMessageBox !== 0">
+        <p v-if="showMessageBox === 1">此操作将导致当前思维导图的数据丢失!</p>
+        <p v-else-if="showMessageBox === 2">此操作将导致当前思维导图的数据丢失!</p>
+        <!--  -->
+        <div v-else-if="showMessageBox === 3" class="radio-group">
+            <p style="padding: 0;">选择下载格式</p>
+            <label class="radio" @click="toggleCheck(1)">
+                <span class="radio-inner" :class="{'radio-checked': checked1}"></span>
+                <span class="radio-label">图片</span>
+            </label>
+            <label class="radio" @click="toggleCheck(2)">
+                <span class="radio-inner" :class="{'radio-checked': checked2}"></span>
+                <span class="radio-label">jm</span>
+            </label>
+        </div>
     </message-box>
 </section>
 </template>
@@ -38,8 +41,8 @@ export default {
     },
     data() {
         return {
-            showMessageBox: false,
-            showOpenMenu: false,
+            // 0, 不显示， 1 新建， 2 打开， 3 下载
+            showMessageBox: 0,
             checked1: false,
             checked2: false,
         }
@@ -92,13 +95,14 @@ export default {
             fileReader.readAsText(file, 'utf-8')
         },
         clickConfirm() {
-            this.showMessageBox = false
-            //
-            if (this.showOpenMenu) {
-                this.openFile()
-            } else {
-                this.download()
+            let selectShow = {
+                1: '1',
+                2: this.openFile,
+                3: this.download,
             }
+            selectShow[this.showMessageBox]()
+            // 重置 showMessageBox
+            this.showMessageBox = 0
         },
     },
 }
