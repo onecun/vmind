@@ -1,16 +1,3 @@
-// const saveLocal = function(str) {
-//     localStorage.setItem('vmind', str)
-// }
-
-// const getLocal = function() {
-//     let str = localStorage.getItem('vmind')
-//     return str
-// }
-
-// const clearLocal = function() {
-//     localStorage.clear()
-// }
-
 export default {
     clearLocal() {
         localStorage.clear()

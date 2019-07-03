@@ -10,7 +10,9 @@ import jsMind from 'jsmind/js/jsmind'
 import 'jsmind/js/jsmind.draggable'
 import 'jsmind/js/jsmind.screenshot'
 import popup from './popup'
-import local from '../localSave'
+import local from '../utils/localSave'
+import mindmapExport from '../utils/mindMapExport'
+import downloadFile from '../utils/downloadFile'
 
 export default {
     components: {
@@ -81,18 +83,20 @@ export default {
             // console.log(jm)
         },
         downloawImg() {
-            this.jm.screenshot.shootDownload()
         },
-        downloawJm(title) {
-            const link = document.createElement('a')
-            link.download = title + '.jm'
-            // 字符内容转变成blob地址
-            let str = JSON.stringify(this.jm.get_data())
-            let blob = new Blob([str])
-            link.href = URL.createObjectURL(blob)
-            // 点击下载
-            link.click()
-            log(link)
+        download(format, title) {
+            let file
+            if (format === 'img') {
+                this.jm.screenshot.shootDownload()
+                return 
+            } else if (format === 'mm') {
+                file = this.jm.get_data('freemind')
+            } else {
+                file = this.jm.get_data()
+            }
+            // log(typeof mindmapExport(file, format), format)
+            file = mindmapExport(file, format)
+            downloadFile(file, title, format)
         },
 
         // 设置点击节点后 popup 出现的位置
@@ -146,6 +150,8 @@ export default {
                 if (selectedNode) {
                     this.jm.remove_node(selectedNode)
                 }
+                //
+                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('editNode', (nodeid) => {
                 if (nodeid) {
@@ -157,6 +163,8 @@ export default {
                         this.jm.begin_edit(selectedNode)
                     }
                 }
+                //
+                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('toggleNode', () => {
                 let selectedNode = this.jm.get_selected_node()
@@ -167,14 +175,16 @@ export default {
         }
     },
     created() {
-        this.$bus.$on('downloadImg', () => {
-            this.downloawImg()
+        this.$bus.$on('download', (format, title) => {
+            this.download(format, title)
         })
-        this.$bus.$on('downloadJm', (title) => {
-            this.downloawJm(title)
+        this.$bus.$on('createNewMind', () => {
+            this.jm.show(this.defaultMind)
+            local.clearLocal()
         })
         this.$bus.$on('readFile', (str) => {
-            let file = JSON.parse(str)
+            // let file = JSON.parse(str)
+
             this.jm.show(file)
         })
         // 绑定 popup 上按钮的事件

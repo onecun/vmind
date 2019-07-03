@@ -10,7 +10,7 @@
      </button>
     <button @click="showMessageBox = 3" class="download">
          <span class="icon icon-download"></span>
-        <span>下载</span>
+        <span>导出</span>
      </button>
     <message-box @cancel='showMessageBox = 0' @confirm='clickConfirm()' v-if="showMessageBox !== 0">
         <p v-if="showMessageBox === 1">此操作将导致当前思维导图的数据丢失!</p>
@@ -19,12 +19,28 @@
         <div v-else-if="showMessageBox === 3" class="radio-group">
             <p style="padding: 0;">选择下载格式</p>
             <label class="radio" @click="toggleCheck(1)">
-                <span class="radio-inner" :class="{'radio-checked': checked1}"></span>
-                <span class="radio-label">图片</span>
+                <span class="radio-inner" :class="{'radio-checked': checked === 1}"></span>
+                <span class="radio-label">PNG 图片 (.png)</span>
             </label>
             <label class="radio" @click="toggleCheck(2)">
-                <span class="radio-inner" :class="{'radio-checked': checked2}"></span>
-                <span class="radio-label">jm</span>
+                <span class="radio-inner" :class="{'radio-checked': checked === 2}"></span>
+                <span class="radio-label">JMind 格式 (.jm)</span>
+            </label>
+            <label class="radio" @click="toggleCheck(3)">
+                <span class="radio-inner" :class="{'radio-checked': checked === 3}"></span>
+                <span class="radio-label">MarkDown 格式 (.md)</span>
+            </label>
+            <label class="radio" @click="toggleCheck(4)">
+                <span class="radio-inner" :class="{'radio-checked': checked === 4}"></span>
+                <span class="radio-label">大纲文本 (.txt)</span>
+            </label>
+            <label class="radio" @click="toggleCheck(5)">
+                <span class="radio-inner" :class="{'radio-checked': checked === 5}"></span>
+                <span class="radio-label">KityMinder 格式 (.km)</span>
+            </label>
+            <label class="radio" @click="toggleCheck(6)">
+                <span class="radio-inner" :class="{'radio-checked': checked === 6}"></span>
+                <span class="radio-label">Freemind 格式 (.mm)</span>
             </label>
         </div>
     </message-box>
@@ -43,27 +59,26 @@ export default {
         return {
             // 0, 不显示， 1 新建， 2 打开， 3 下载
             showMessageBox: 0,
-            checked1: false,
-            checked2: false,
+            checked: 0,
+            downFormat: {
+                1: 'img',
+                2: 'jm',
+                3: 'md',
+                4: 'txt',
+                5: 'km',
+                6: 'mm',
+            },
         }
     },
     methods: {
         toggleCheck(checkId) {
-            if (checkId === 1) {
-                this.checked1 = !this.checked1
-                this.checked2 = false
-            } else {
-                this.checked2 = !this.checked2
-                this.checked1 = false
-            }
+            this.checked = checkId
         },
         download() {
             // checked1 下载图片, checked2 下载 jm 文件
-            if (this.checked1) {
-                this.$bus.$emit('downloadImg')
-            } else if (this.checked2) {
-                this.$bus.$emit('downloadJm', this.title)
-            }
+            // checked 3 下载 md, 4 txt, 5 km, 6 mm
+            let format = this.downFormat[this.checked]
+            this.$bus.$emit('download', format, this.title)
         },
         openFile() {
             const input = document.createElement('input')
@@ -72,7 +87,7 @@ export default {
             // 获取文件后, 触发回调
             input.addEventListener('change', (event) => {
                 const file = event.target.files[0]
-                log(123)
+                log('openfile')
                 const fileName = file.name.split('.') // ['file-title', 'format']
                 const fileTitle = fileName[0]
                 const format = fileName[1]
@@ -94,9 +109,12 @@ export default {
             }
             fileReader.readAsText(file, 'utf-8')
         },
+        createNewMind() {
+            this.$bus.$emit('createNewMind')
+        },
         clickConfirm() {
             let selectShow = {
-                1: '1',
+                1: this.createNewMind,
                 2: this.openFile,
                 3: this.download,
             }
@@ -137,11 +155,11 @@ export default {
 .radio-group {
     padding: 0;
     .radio {
-        padding: 10px;
+        padding: 5px;
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        width: 120px;
+        width: 80%;
         margin: 4px 0 4px 0;
         border: 1px solid #DCDFE6;
         border-radius: 6px;
@@ -162,7 +180,7 @@ export default {
         }
         .radio-label {
             padding: 0 !important;
-            width: 70px;
+            width: 70%;
         }
     }
     .radio-checked {
