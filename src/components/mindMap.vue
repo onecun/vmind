@@ -80,7 +80,16 @@ export default {
             } else {
                 this.jm.show(this.defaultMind)
             }
-            // console.log(jm)
+            // jsmind.js 1649 行
+            let _jm = this.jm
+            this.jm.add_event_listener(function(type, data) {
+                // type === 3, 即 event_type.edit 触发
+                if (type === 3) {
+                    log('我被监听啦')
+                    // 保存
+                    local.saveLocal(_jm.get_data())
+                }
+            })
         },
         downloawImg() {
         },
@@ -108,14 +117,15 @@ export default {
                     let nodeid = jsMind.util.uuid.newid()
                     let topic = '新建节点'
                     let newNode =  this.jm.add_node(selectedNode, nodeid, topic)
-                    // 新建节点后，触发编辑 edit_node_begin 
+                    // 新建节点后，触发编辑
                     this.$bus.$emit('editNode', newNode)
                 }
-                //
-                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('addBrotherNode', () => {
                 let selectedNode = this.jm.get_selected_node()
+                if (selectedNode.isroot) {
+                    return
+                }
                 if (selectedNode) {
                     let nodeid = jsMind.util.uuid.newid()
                     let topic = '新建节点'
@@ -123,16 +133,15 @@ export default {
                     // 新建节点后，触发编辑
                     this.$bus.$emit('editNode', nodeid)
                 }
-                //
-                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('deleteNode', () => {
                 let selectedNode = this.jm.get_selected_node()
+                if (selectedNode.isroot) {
+                    return
+                }
                 if (selectedNode) {
                     this.jm.remove_node(selectedNode)
                 }
-                //
-                local.saveLocal(this.jm.get_data())
             })
             this.$bus.$on('editNode', (nodeid) => {
                 if (nodeid) {
@@ -144,10 +153,8 @@ export default {
                         this.jm.begin_edit(selectedNode)
                     }
                 }
-                this.jm.select_node(nodeid)
-                setTimeout(function() { document.querySelector('.jsmind-editor').focus() }, 20)
-                //
-                local.saveLocal(this.jm.get_data())
+                // 延迟选择 input。focus() 避免，input 还没插入 DOM
+                setTimeout(() => { document.querySelector('.jsmind-editor').focus() }, 20)
             })
             this.$bus.$on('toggleNode', () => {
                 let selectedNode = this.jm.get_selected_node()
