@@ -1,5 +1,5 @@
 <template>
-<main ref="main" id="jsmind_container" @mousedown="setPopupPosition($event)">
+<main ref="main" id="jsmind_container">
     <popup ref="test"></popup>
 </main>
 </template>
@@ -99,25 +99,6 @@ export default {
             downloadFile(file, title, format)
         },
 
-        // 设置点击节点后 popup 出现的位置
-        setPopupPosition(event) {
-            var ele = event.target
-            if (ele.tagName === 'JMNODE') {
-                // console.log(ele.tagName)
-                let top = ele.offsetTop
-                let left = ele.offsetLeft
-                this.$bus.$emit('setPosition', true, top, left)
-                //
-                ele.scrollIntoView({
-                    block: 'center',
-                    behavior: 'smooth',
-                    inline: 'center',
-                })
-            } else if (ele.tagName !== 'BUTTON' && ele.tagName !== 'SPAN') {
-                this.$bus.$emit('setPosition', false)
-            }
-        },
-
         // 绑定 popup 上按钮的事件
         // 增删改等
         popupBindEevent() {
@@ -126,9 +107,9 @@ export default {
                 if (selectedNode) {
                     let nodeid = jsMind.util.uuid.newid()
                     let topic = '新建节点'
-                    this.jm.add_node(selectedNode, nodeid, topic)
-                    // 新建节点后，触发编辑
-                    this.$bus.$emit('editNode', nodeid)
+                    let newNode =  this.jm.add_node(selectedNode, nodeid, topic)
+                    // 新建节点后，触发编辑 edit_node_begin 
+                    this.$bus.$emit('editNode', newNode)
                 }
                 //
                 local.saveLocal(this.jm.get_data())
@@ -163,6 +144,8 @@ export default {
                         this.jm.begin_edit(selectedNode)
                     }
                 }
+                this.jm.select_node(nodeid)
+                setTimeout(function() { document.querySelector('.jsmind-editor').focus() }, 20)
                 //
                 local.saveLocal(this.jm.get_data())
             })

@@ -1,26 +1,26 @@
 <template>
-    <div ref="popup" :style="{top: offsetTop, left: offsetLeft}" class="popup-menu" v-show="show" @click="show = false">
-        <button class="add-node" v-on:click="addNode()">
+<div ref="popup" :style="{top: offsetTop, left: offsetLeft}" class="popup-menu" v-show="show" @click="show = false">
+    <button class="add-node" v-on:click="addNode()">
             <span class="icon icon-node"></span>
             <span>添加子节点</span>
         </button>
-        <button class="add-brother-node" @click="addBrotherNode()">
+    <button class="add-brother-node" @click="addBrotherNode()">
             <span class="icon icon-sub-node"></span>
             <span>添加兄弟节点</span>
         </button>
-        <button class="delete-node" @click="deleteNode()">
+    <button class="delete-node" @click="deleteNode()">
             <span class="icon icon-delete"></span>
             <span>删除</span>
         </button>
-        <button class="edit-node" @click="editNode()">
+    <button class="edit-node" @click="editNode()">
             <span class="icon icon-edit"></span>
             <span>编辑</span>
         </button>
-        <button class="toggle-node-tree" @click="toggleNode()">
+    <button class="toggle-node-tree" @click="toggleNode()">
             <span class="icon icon-unfold"></span>
             <span>显隐子节点</span>
         </button>
-    </div>
+</div>
 </template>
 
 <script>
@@ -40,26 +40,45 @@ export default {
             this.$bus.$emit('addBrotherNode')
         },
         deleteNode() {
-            this.$bus.$emit('deleteNode')            
+            this.$bus.$emit('deleteNode')
         },
         editNode() {
-            this.$bus.$emit('editNode') 
+            this.$bus.$emit('editNode')
         },
         toggleNode() {
             this.$bus.$emit('toggleNode')
         },
+
+        // 设置点击节点后 popup 出现的位置
+        setPopupPosition(event) {
+            let ele = event.target
+            if (ele.tagName === 'JMNODE') {
+                this.show = true
+                // console.log(ele.tagName)
+                let top = ele.offsetTop
+                let left = ele.offsetLeft
+                this.offsetTop = top - 60 + 'px'
+                this.offsetLeft = left + 'px'
+                //
+                ele.scrollIntoView({
+                    block: 'center',
+                    behavior: 'smooth',
+                    inline: 'center',
+                })
+            } else if (ele.tagName !== 'BUTTON' && ele.tagName !== 'SPAN') {
+                this.show = false
+            }
+        },
     },
-    created() {
-        this.$bus.$on('setPosition', (isShow, top, left) => {
-            this.show = isShow
-            this.offsetTop = top - 60 + 'px'
-            this.offsetLeft = left + 'px'
+    mounted() {
+        window.addEventListener('mousedown', (event) => {
+            this.setPopupPosition(event)
         })
-    }
+    },
 }
 </script>
 
-<style lang='scss' rel='stylesheet/scss'>
+<style lang="scss">
 @import '../assets/styles/icon.css';
 
 .popup-menu {
@@ -74,6 +93,7 @@ export default {
     justify-content: space-around;
     border-radius: 5px;
     box-shadow: 2px 2px 8px rgba($color: #000000, $alpha: 0.4);
+
     * {
         display: flex;
         flex-direction: column;
@@ -83,6 +103,7 @@ export default {
         color: #303133;
         border: none;
         cursor: pointer;
+
         &:hover {
             background: #E4E7ED;
             border-radius: 5px;
@@ -94,11 +115,10 @@ export default {
 .icon {
     font-size: 26px;
 }
-.icon-delete, 
+
+.icon-delete,
 .icon-edit,
 .icon-unfold {
     font-size: 24px;
 }
-
-
 </style>
