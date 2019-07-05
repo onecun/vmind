@@ -74,6 +74,9 @@ export default {
         window.addEventListener('mousedown', (event) => {
             this.setPopupPosition(event)
         })
+        this.$bus.$on('popup-hide', () => {
+            this.show = false
+        })
     },
 }
 </script>

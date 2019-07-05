@@ -81,33 +81,7 @@ export default {
             this.$bus.$emit('download', format, this.title)
         },
         openFile() {
-            const input = document.createElement('input')
-            input.type = 'file'
-            input.accept = '.jm'
-            // 获取文件后, 触发回调
-            input.addEventListener('change', (event) => {
-                const file = event.target.files[0]
-                log('openfile')
-                const fileName = file.name.split('.') // ['file-title', 'format']
-                const fileTitle = fileName[0]
-                const format = fileName[1]
-                // 读取
-                if (format === 'jm') {
-                    this.readFile(file)
-                } else {
-                    alert('暂只支持 jm 文件')
-                }
-            })
-            input.click()
-        },
-        readFile(file) {
-            const fileReader = new FileReader()
-            fileReader.onload = (event) => {
-                const str = event.target.result
-                // log(str, typeof str, JSON.parse(str))
-                this.$bus.$emit('readFile', str)
-            }
-            fileReader.readAsText(file, 'utf-8')
+            this.$bus.$emit('openFile')
         },
         createNewMind() {
             this.$bus.$emit('createNewMind')

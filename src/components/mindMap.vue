@@ -1,6 +1,6 @@
 <template>
 <main ref="main" id="jsmind_container">
-    <popup ref="test"></popup>
+    <popup></popup>
 </main>
 </template>
 
@@ -9,10 +9,14 @@ import 'jsmind/style/jsmind.css'
 import jsMind from 'jsmind/js/jsmind'
 import 'jsmind/js/jsmind.draggable'
 import 'jsmind/js/jsmind.screenshot'
+//
 import popup from './popup'
 import local from '../utils/localSave'
+//
 import mindmapExport from '../utils/mindMapExport'
 import downloadFile from '../utils/downloadFile'
+import openFile from '../utils/openFile'
+import mindmapParse from '../utils/mindMapParse'
 
 export default {
     components: {
@@ -40,9 +44,9 @@ export default {
             defaultMind: {
                 // 元信息
                 "meta": {
-                    "name": "jsMind-demo-tree",
-                    "author": "hizzgdev@163.com",
-                    "version": "0.2"
+                    "name": "Vmind",
+                    "author": "sdk233@outlook.com",
+                    "version": "0.1"
                 },
                 // 格式
                 "format": "node_tree",
@@ -52,23 +56,23 @@ export default {
                     "topic": "主题",
                     "expanded": true,
                     "children": [{
-                        "id": "bb228f7b14432504",
+                        "id": "1",
                         "topic": "分支1",
                         "expanded": true,
                         "direction": "right"
                     }, {
-                        "id": "bb2290248041a7dd",
+                        "id": "2",
                         "topic": "分支2",
                         "expanded": true,
                         "direction": "right"
                     }, {
-                        "id": "bb228fe58acbb22e",
+                        "id": "3",
                         "topic": "分支3",
                         "expanded": true,
                         "direction": "right"
                     }]
                 }
-            }
+            },
         }
     },
     methods: {
@@ -82,12 +86,14 @@ export default {
             }
             // jsmind.js 1649 行
             let _jm = this.jm
-            this.jm.add_event_listener(function(type, data) {
+            this.jm.add_event_listener((type, data) => {
                 // type === 3, 即 event_type.edit 触发
                 if (type === 3) {
-                    log('我被监听啦')
+                    // log('我被监听啦')
                     // 保存
                     local.saveLocal(_jm.get_data())
+                    // 隐藏 popup
+                    this.$bus.$emit('popup-hide')
                 }
             })
         },
@@ -172,10 +178,12 @@ export default {
             this.jm.show(this.defaultMind)
             local.clearLocal()
         })
-        this.$bus.$on('readFile', (str) => {
-            // let file = JSON.parse(str)
-
-            this.jm.show(file)
+        this.$bus.$on('openFile', () => {
+            openFile().then((file) => {
+                let {data, format} = file
+                let newMindmap = mindmapParse(data, format)
+                this.jm.show(newMindmap)
+            })
         })
         // 绑定 popup 上按钮的事件
         this.popupBindEevent()
