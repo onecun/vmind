@@ -192,6 +192,13 @@ export default {
         this.$bus.$on('selectTheme', (themeName) => {
             this.jm.set_theme(themeName)
         })
+        this.$bus.$on('unfoldAllNodes', (unfold) => {
+            if (unfold) {
+                this.jm.expand_all()
+            } else {
+                this.jm.collapse_all()
+            }
+        })
     },
     mounted() {
         this.init()

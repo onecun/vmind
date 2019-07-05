@@ -5,17 +5,30 @@
              class="theme">
             <span class="icon icon-theme"></span>
             <span>主题</span>
-                <div v-show="showSelecter" class="theme-control fadein">
-                    <li @click="selectTheme(0)" style="background-color:  #409EFF;"></li>
-                    <li @click="selectTheme(1)" style="background-color:  #67C23A;"></li>
-                    <li @click="selectTheme(2)" style="background-color:  #E6A23C;"></li>
-                    <li @click="selectTheme(3)" style="background-color:  #909399;"></li>
-                    <li @click="selectTheme(4)" style="background-color:  #F56C6C;"></li>
+            <transition name="slide-fade">
+                <div v-show="showSelecter" class="theme-control">
+                    <div @click="selectTheme(0)" class="theme-item">
+                        <li style="background-color:  #409EFF;"></li>
+                    </div>
+                    <div @click="selectTheme(1)" class="theme-item">
+                        <li style="background-color:  #67C23A;"></li>
+                    </div>
+                    <div @click="selectTheme(2)" class="theme-item">
+                        <li style="background-color:  #E6A23C;"></li>
+                    </div>
+                    <div @click="selectTheme(3)" class="theme-item">
+                        <li style="background-color:  #909399;"></li>
+                    </div>
+                    <div @click="selectTheme(4)" class="theme-item">
+                        <li style="background-color:  #F56C6C;"></li>
+                    </div>
                 </div>
+            </transition>
       </button>
-    <button class="unfold-all-nodes">
+    <button class="unfold-all-nodes" @click="unfoldAllNodes()">
             <span class="icon icon-unfold-all"></span>
-            <span>展开所有节点</span>
+            <span v-if="!unfold">展开所有</span>
+            <span v-else>收起所有</span>
       </button>
 </section>
 </template>
@@ -26,12 +39,17 @@ export default {
         return {
             showSelecter: false,
             themes: ['default', 'success', 'warning', 'info', 'danger', ],
+            unfold: false,
         }
     },
     methods: {
         selectTheme(theme) {
             let themeName = this.themes[theme]
             this.$bus.$emit('selectTheme', themeName)
+        },
+        unfoldAllNodes() {
+            this.unfold = !this.unfold
+            this.$bus.$emit('unfoldAllNodes', this.unfold)
         }
     },
 
@@ -70,14 +88,20 @@ export default {
             border: 1px solid #333;
             border-top: none;
             border-radius: 4px;
+            .theme-item {
+                width: 100%;
+                &:hover {
+                    background: #F2F6FC;
+                }
+                li {
+                    display: inline-block;
+                    width: 18px;
+                    height: 18px;
+                    padding: 2px;
+                    margin: 3px;
+                    border-radius: 50%;
+                }
 
-            li {
-                display: inline-block;
-                width: 20px;
-                height: 20px;
-                padding: 3px;
-                margin: 3px;
-                border-radius: 50%;
             }
         }
     }
