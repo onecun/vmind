@@ -17,6 +17,9 @@ import mindmapExport from '../utils/mindMapExport'
 import downloadFile from '../utils/downloadFile'
 import openFile from '../utils/openFile'
 import mindmapParse from '../utils/mindMapParse'
+//
+import jmOpitions from '../mindmap_config/jsmind_options'
+import jmDefaultMindmap from '../mindmap_config/jsmind_default_mindmap'
 
 export default {
     components: {
@@ -24,65 +27,16 @@ export default {
     },
     data() {
         return {
-            options: {
-                container: 'jsmind_container', // [必选] 容器的ID，或者为容器的对象
-                editable: true, // [可选] 是否启用编辑
-                theme: 'warning', // [可选] 主题
-                mode: 'full',
-                view: {
-                    hmargin: 100, // 思维导图距容器外框的最小水平距离
-                    vmargin: 100, // 思维导图距容器外框的最小垂直距离
-                    line_width: 2, // 思维导图线条的粗细
-                    line_color: '#555' // 思维导图线条的颜色
-                },
-                layout:{
-                    hspace: 50,          // 节点之间的水平间距
-                    vspace: 40,          // 节点之间的垂直间距
-                    pspace: 13,           // 节点收缩/展开控制器的尺寸
-                },
-            },
-            defaultMind: {
-                // 元信息
-                "meta": {
-                    "name": "Vmind",
-                    "author": "sdk233@outlook.com",
-                    "version": "0.1"
-                },
-                // 格式
-                "format": "node_tree",
-                // 节点数据
-                "data": {
-                    "id": "root",
-                    "topic": "主题",
-                    "expanded": true,
-                    "children": [{
-                        "id": "1",
-                        "topic": "分支1",
-                        "expanded": true,
-                        "direction": "right"
-                    }, {
-                        "id": "2",
-                        "topic": "分支2",
-                        "expanded": true,
-                        "direction": "right"
-                    }, {
-                        "id": "3",
-                        "topic": "分支3",
-                        "expanded": true,
-                        "direction": "right"
-                    }]
-                }
-            },
         }
     },
     methods: {
         init() {
-            this.jm = new jsMind(this.options)
+            this.jm = new jsMind(jmOpitions)
             let localMind = local.getLocal()
             if (localMind) {
                 this.jm.show(localMind)
             } else {
-                this.jm.show(this.defaultMind)
+                this.jm.show(jmDefaultMindmap)
             }
             // jsmind.js 1649 行
             let _jm = this.jm
@@ -175,7 +129,7 @@ export default {
             this.download(format, title)
         })
         this.$bus.$on('createNewMind', () => {
-            this.jm.show(this.defaultMind)
+            this.jm.show(jmDefaultMindmap)
             local.clearLocal()
         })
         this.$bus.$on('openFile', () => {
