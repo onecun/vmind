@@ -14,5 +14,20 @@ export default {
         vspace: 40, // 节点之间的垂直间距
         pspace: 13, // 节点收缩/展开控制器的尺寸
     },
+    shortcut:{
+       enable:true,        // 是否启用快捷键
+       handles:{},         // 命名的快捷键事件处理器
+       mapping:{           // 快捷键映射
+           addchild   : 9,     // <Tab>
+           addbrother : 13,    // <Enter>
+           editnode   : 113,   // <F2>
+           delnode    : 46,    // <Delete>
+           toggle     : 32,    // <Space>
+           left       : 37,    // <Left>
+           up         : 38,    // <Up>
+           right      : 39,    // <Right>
+           down       : 40,    // <Down>
+       }
+    }
 
 }

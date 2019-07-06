@@ -147,6 +147,16 @@ export default {
                 this.jm.collapse_all()
             }
         })
+        // 解决使用快捷键， 新建节点不能被 focus 的问题
+        window.addEventListener('keydown', e => {
+            if (e.keyCode === 9 || e.keyCode === 13) {
+                let newNode = this.jm.get_selected_node()
+                // 新建节点后，触发编辑
+                if (newNode !== null) {
+                    this.$bus.$emit('editNode', newNode)
+                }
+            }
+        })
     },
     mounted() {
         this.init()
