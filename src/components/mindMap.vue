@@ -25,10 +25,6 @@ export default {
     components: {
         popup
     },
-    data() {
-        return {
-        }
-    },
     methods: {
         init() {
             this.jm = new jsMind(jmOpitions)
@@ -50,8 +46,6 @@ export default {
                     this.$bus.$emit('popup-hide')
                 }
             })
-        },
-        downloawImg() {
         },
         download(format, title) {
             let file
