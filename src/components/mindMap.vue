@@ -39,7 +39,6 @@ export default {
             this.jm.add_event_listener((type, data) => {
                 // type === 3, 即 event_type.edit 触发
                 if (type === 3) {
-                    // log('我被监听啦')
                     // 保存
                     local.saveLocal(_jm.get_data())
                     // 隐藏 popup
