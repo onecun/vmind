@@ -1,35 +1,31 @@
 <template>
 <section class="view-control">
-    <button @mouseover="showSelecter = true"
-            @mouseout="showSelecter = false"
-             class="theme">
-            <span class="icon icon-theme"></span>
-            <span>主题</span>
-            <transition name="slide-fade">
-                <div v-show="showSelecter" class="theme-control">
-                    <div @click="selectTheme(0)" class="theme-item">
-                        <li style="background-color:  #409EFF;"></li>
-                    </div>
-                    <div @click="selectTheme(1)" class="theme-item">
-                        <li style="background-color:  #67C23A;"></li>
-                    </div>
-                    <div @click="selectTheme(2)" class="theme-item">
-                        <li style="background-color:  #E6A23C;"></li>
-                    </div>
-                    <div @click="selectTheme(3)" class="theme-item">
-                        <li style="background-color:  #909399;"></li>
-                    </div>
-                    <div @click="selectTheme(4)" class="theme-item">
-                        <li style="background-color:  #F56C6C;"></li>
-                    </div>
-                </div>
-            </transition>
-      </button>
+    <button @mouseover="showSelecter = true" @mouseout="showSelecter = false" class="theme">
+        <span class="icon icon-theme"></span>
+        <span>主题</span>
+        <div v-show="showSelecter" class="theme-control fadein">
+            <div @click="selectTheme(0)" class="theme-item">
+                <li style="background-color:  #409EFF;"></li>
+            </div>
+            <div @click="selectTheme(1)" class="theme-item">
+                <li style="background-color:  #67C23A;"></li>
+            </div>
+            <div @click="selectTheme(2)" class="theme-item">
+                <li style="background-color:  #E6A23C;"></li>
+            </div>
+            <div @click="selectTheme(3)" class="theme-item">
+                <li style="background-color:  #909399;"></li>
+            </div>
+            <div @click="selectTheme(4)" class="theme-item">
+                <li style="background-color:  #F56C6C;"></li>
+            </div>
+        </div>
+    </button>
     <button class="unfold-all-nodes" @click="unfoldAllNodes()">
-            <span class="icon icon-unfold-all"></span>
-            <span v-if="!unfold">展开所有</span>
-            <span v-else>收起所有</span>
-      </button>
+        <span class="icon icon-unfold-all"></span>
+        <span v-if="!unfold">展开所有</span>
+        <span v-else>收起所有</span>
+    </button>
 </section>
 </template>
 
@@ -38,7 +34,7 @@ export default {
     data() {
         return {
             showSelecter: false,
-            themes: ['default', 'success', 'warning', 'info', 'danger', ],
+            themes: ['primary', 'success', 'warning', 'info', 'danger', ],
             unfold: false,
         }
     },
@@ -88,11 +84,14 @@ export default {
             border: 1px solid #333;
             border-top: none;
             border-radius: 4px;
+
             .theme-item {
                 width: 100%;
+
                 &:hover {
                     background: #F2F6FC;
                 }
+
                 li {
                     display: inline-block;
                     width: 18px;

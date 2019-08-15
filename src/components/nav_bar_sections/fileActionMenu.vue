@@ -20,15 +20,15 @@
             <p style="padding: 0;">选择下载格式</p>
             <label class="radio" @click="toggleCheck(1)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 1}"></span>
-                <span class="radio-label">PNG 图片 (.png)</span>
+                <span class="radio-label">PNG (.png)</span>
             </label>
             <label class="radio" @click="toggleCheck(2)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 2}"></span>
-                <span class="radio-label">JMind 格式 (.jm)</span>
+                <span class="radio-label">JMind (.jm)</span>
             </label>
             <label class="radio" @click="toggleCheck(3)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 3}"></span>
-                <span class="radio-label">MarkDown 格式 (.md)</span>
+                <span class="radio-label">MarkDown (.md)</span>
             </label>
             <label class="radio" @click="toggleCheck(4)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 4}"></span>
@@ -36,11 +36,11 @@
             </label>
             <label class="radio" @click="toggleCheck(5)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 5}"></span>
-                <span class="radio-label">KityMinder 格式 (.km)</span>
+                <span class="radio-label">KityMinder (百度脑图)</span>
             </label>
             <label class="radio" @click="toggleCheck(6)">
                 <span class="radio-inner" :class="{'radio-checked': checked === 6}"></span>
-                <span class="radio-label">Freemind 格式 (.mm)</span>
+                <span class="radio-label">Freemind (XMind)</span>
             </label>
         </div>
     </message-box>
